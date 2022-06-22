@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>JS_Part10</title>
+        <link rel="stylesheet" href="./index.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+    <body>
+        <forms>
+            <div id="container">
+                
+                <div id="container2">
+                    Nome do produto:<input type="text" id="nome"> 
+                    Descrição:  <textarea id="descricao" rows="6" cols="20"></textarea>
+                    Valor: <input type="text" id="valor">
+                </div>
+                <div>
+                    <input type="button" id="incluir" value="Incluir produto">
+                    <input type="button" id="listar" value="Listar produto">
+                </div>
+                <i id="textedit"></i><input type="text" id="editar" value=""><input type="button" id="btnid" value="">
+                <h3></h3>
+                <table border="1">
+                    <thead>
+                        <th>ID</th>
+                        <th>Produto</th>
+                        <th>Valor</th>
+                        <th>Editar</th>
+                        <th>Apagar</th>
+                    </thead>
+                    <tbody id="tabela">
+                        <!-- <tr>
+                            <td>1</td>
+                            <td>carro</td>
+                            <td>30.000</td>
+                            <td class="action"a><img src="./assests/editar-arquivo.png"></td>
+                            <td class="action"><img src="./assests/excluir.png"></td>
+                        </tr> -->
+                    </tbody>
+                </table>
+
+            </div>
+        </forms>
+
+        <script src="./index.js"></script>
+    </body>
+</html>

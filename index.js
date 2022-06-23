@@ -1,11 +1,16 @@
-btn = document.querySelector ("#incluir")  
-btn2 = document.querySelector("#listar")
+btnIncluir = document.querySelector ("#botaoIncluir")  
+btnListar = document.querySelector("#botaoListar")
+
 let id = 1
 const confirme = document.querySelector ("h3") 
+const confirme2 = document.querySelector ("h4") 
 let produtos = [];
 
-btn.addEventListener ("click", incluir)
-btn2.addEventListener ("click", listar)
+let moeda = document.querySelector("#valor")
+
+btnIncluir.addEventListener ("click", incluir)
+btnListar.addEventListener ("click", listar)
+
 
 function incluir() {
     // Incluido em:
@@ -23,9 +28,8 @@ function incluir() {
     const nome = document.querySelector("#nome").value;
     const descricao = document.querySelector("#descricao").value;
     const valor = parseFloat(document.getElementById ('valor').value.replace(',','.'))
-    let tabela = document.querySelector("#tabela")
 
-
+    
     //Verificação de dados:
     try {
         if(nome == "") {
@@ -40,6 +44,7 @@ function incluir() {
         if(isNaN(valor)) {
             throw `Falha no cadastro do produto, insira apenas números no campo de valor`
         }
+
         //Objeto:
         produto.id = id,
         produto.nome = nome,
@@ -49,10 +54,7 @@ function incluir() {
 
         //Array:
         produtos.push(produto)
-        // console.log(produtos)
         produto.id = id++;
-
-        console.log(produtos)
 
         //Impressão:
         confirme.textContent = `Produto ${produto.nome} incluído com sucesso!`
@@ -71,13 +73,13 @@ function incluir() {
 }
 
 function listar(){
+    let tabela = document.querySelector("#tabela")
     let cont = 0
     tabela.innerHTML = ""
-        // Clear table
+
+    // Inserindo valores na tabela:
     while (cont < produtos.length) {
-        console.log(produtos.length)
         let linha = tabela.insertRow();
-        // linha.textContent = "";
 
         let colunaId = linha.insertCell();
         let colunaNome = linha.insertCell();
@@ -87,49 +89,101 @@ function listar(){
         
         colunaId.innerHTML = produtos[cont].id;
         colunaNome.textContent = produtos[cont].nome;
-        colunaValor.textContent = produtos[cont].valor;
+        colunaValor.textContent = `R$ ${produtos[cont].valor}`;
 
         let imagemEdit = document.createElement('img')
         imagemEdit.src = './assests/edit.svg'
         colunaEditar.appendChild (imagemEdit)
-        imagemEdit.setAttribute("onclick", "editar("+ JSON.stringify(produtos[cont])+")")
+        imagemEdit.setAttribute("onclick", "abrirPopup()")
+        // imagemEdit.setAttribute("onclick", "editarid("+ JSON.stringify(produtos[cont])+")")
 
         let imagemApagar = document.createElement('img')
         imagemApagar.src = './assests/excluir.png'
         colunaApagar.appendChild (imagemApagar)
         imagemApagar.setAttribute("onclick", "apagar("+produtos[cont].id+")")
+
+        let btnConfirmar = document.querySelector("#botaoEditar")
+        btnConfirmar.setAttribute("onclick",  "editar("+produtos[cont].id+")")
+
+         //Popup visualização:
+         colunaNome.setAttribute("onclick", "mostrar("+JSON.stringify(produtos)+", "+produtos[cont].id+")")
+         let btnFechar2 = document.querySelector ("#fechar2")
+         btnFechar2.setAttribute ("onclick", "fecharpopup2()")
+
         cont++;
-
         }
+
+        //Popup edição:
+        let btnFechar = document.querySelector ("#fechar")
+        
+        btnFechar.addEventListener ("click", fecharPopup)
+        
 }
 
-function editar(dados) {
-    btn3 = document.querySelector("#editar")
-    btn4 = document.querySelector("#btnid")
-    textedit = document.querySelector("#textedit")
-    document.querySelector("#nome").value = dados.nome
-    document.querySelector("#valor").value = dados.valor
-    document.querySelector("#descricao").value = dados.descricao
-    const editar = document.querySelector ("#editar")
-    textedit.textContent = "Insira o novo ID"
-    editar.style.width = "30px";
-    editar.style.height = "30px";
-    editar.style.padding = "10px"
-    btn4.style.width = "100px";
-    btn4.style.height = "30px";
-    btn4.value = "Confirmar";
-    btn4.addEventListener ("onclick", atualizar(dados.id))
+function mostrar(produtos, id){
+    const btnAbrir = document.querySelector("#popupInfos")
+    btnAbrir.style.display = 'block'
+
+    let contadora = 0
+    const infoID = document.querySelector("#infoID")
+    const infoNome = document.querySelector("#infoNome")
+    const infoDescricao = document.querySelector("#infoDescricao")
+    const infoValor = document.querySelector("#infoValor")
+    const infoData = document.querySelector("#infoData")
+
+    while (contadora < produtos.length) {
+        if(produtos[contadora].id == id){ 
+            infoID.textContent = produtos[contadora].id
+            infoNome.textContent = produtos[contadora].nome
+            infoDescricao.textContent = produtos[contadora].descricao
+            infoValor.textContent = produtos[contadora].valor
+            infoData.textContent = produtos[contadora].incluidoEm
+        }
+        contadora++;
+    }
 }
 
+function abrirPopup (){
+    const btnAbrir = document.querySelector("#popup")
+    btnAbrir.style.display = 'block'
+}
 
-// function atualizar(id){
-    // alert("teste")
-    // let cont = 0
-    // while (cont < produtos.length) {
-    //     if(produtos[cont].id == id){
-    //         produtos[cont].id = document.querySelector("#id").value
-    //     }
-    // }
+function fecharPopup(){
+    btnFechar = document.querySelector ("#popup")
+    btnFechar.style.display = 'none'
+    confirme2.textContent = ``
+}
+
+function fecharpopup2(){
+    btnFechar = document.querySelector ("#popupInfos")
+    btnFechar.style.display = 'none'
+    confirme2.textContent = ``
+}
+
+function editar(id) {
+    let contadora = 0;
+    let nomeEdit = document.querySelector ("#nomeEdit").value
+    let descricaoEdit = document.querySelector ("#descricaoEdit").value
+    let valorEdit = document.querySelector ("#valorEdit").value
+
+    while (contadora < produtos.length) {
+        if(produtos[contadora].id == id){  
+            produtos[contadora].nome = nomeEdit;
+            produtos[contadora].descricao = descricaoEdit;
+            produtos[contadora].valor = valorEdit;
+            confirme2.textContent = `Dados alterados com sucesso, atualize a tabela clicando em "Listar produtos"`
+            confirme2.style.color = "#00ff00"
+        }
+        contadora++;
+    } 
+
+    //resetando display após inserção
+    document.querySelector ("#nomeEdit").value = ""
+    document.querySelector ("#descricaoEdit").value = ""
+    document.querySelector ("#valorEdit").value = ""
+    fecharPopup();
+    listar();
+}   
 
 function apagar(id) {
     let cont2 = 0
@@ -141,7 +195,6 @@ function apagar(id) {
         cont2++;
     }
     produtos = novosprodutos
-    console.log(produtos)
     listar();
 }
 
